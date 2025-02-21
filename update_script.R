@@ -72,10 +72,10 @@ combined_df <- data.frame(
   Year = character(),
   hdl = character(),
   doi = character(),
+  sort = character(),  # Renamed column
   stringsAsFactors = FALSE
 )
 
-# Iterate through article IDs to get article citation data
 for (i in 1:nrow(article_details)) {
   print(i)
   article_id <- article_details$article_id[i]
@@ -90,7 +90,7 @@ for (i in 1:nrow(article_details)) {
   
   citation_data <- fromJSON(content(response, "text", encoding = "UTF-8"), flatten = TRUE)
   
-  # Extract authors, year, and handle with appropriate checks
+  # Extract authors, year, handle, DOI, and tags with appropriate checks
   Author <- if (!is.null(citation_data$authors) && nrow(citation_data$authors) > 0) {
     paste(citation_data$authors$full_name, collapse = ", ")
   } else {
@@ -110,10 +110,25 @@ for (i in 1:nrow(article_details)) {
   }
   
   doi <- if (!is.null(citation_data$doi) && citation_data$doi != "") {
-    paste0("https://doi.org/", citation_data$doi)
+    paste0("https://doi.org/", sub("\\.v[0-9]+$", "", citation_data$doi))
   } else {
     ""
   }
+  
+  sort <- if (!is.null(citation_data$tags)) {
+    # Filter tags that start with "WEDC"
+    filtered_tags <- citation_data$tags[grepl("^WEDC\\d+", citation_data$tags)]
+    
+    if (length(filtered_tags) > 0) {
+      # Extract the number after "WEDC"
+      sub("^WEDC", "", filtered_tags[1])  # Take the first numerical match and remove "WEDC"
+    } else {
+      ""  # Blank if no "WEDC[number]" tags exist
+    }
+  } else {
+    ""
+  }
+  
   
   # Append the citation data to the combined data frame
   combined_df <- rbind(combined_df, data.frame(
@@ -124,17 +139,10 @@ for (i in 1:nrow(article_details)) {
     Year = year,
     hdl = hdl,
     doi = doi,
+    sort = sort,
     stringsAsFactors = FALSE
   ))
 }
-
-combined_df <- combined_df %>%
-  mutate(doi = ifelse(
-    !is.na(doi),
-    sub("\\.v[0-9]+$", "", doi),
-    NA
-  ))
-
 
 # Save the final dataset to a CSV file
 output_file <- "combined_data.csv"
