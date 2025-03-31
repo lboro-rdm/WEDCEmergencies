@@ -1,6 +1,6 @@
 library(httr)
 library(jsonlite)
-library(dplyr)
+library(tidyverse)
 library(lubridate)
 
 # Read collection IDs and titles
@@ -97,7 +97,20 @@ for (i in 1:nrow(article_details)) {
     NA
   }
   
-  year <- if (!is.null(citation_data$published_date)) {
+  pub_date <- NA
+  
+  if (length(citation_data$custom_fields$value) >= 15 && citation_data$custom_fields$value[[15]] != "") {
+    pub_date <- citation_data$custom_fields$value[[15]]
+  }
+  
+  year <- if (!is.na(pub_date) && pub_date != "") {
+    if (grepl("^\\d{4}$", pub_date)) {  # If it's just "YYYY"
+      as.numeric(pub_date)
+    } else {
+      parsed_date <- tryCatch(as.Date(pub_date, format = "%Y-%m-%d"), error = function(e) NA)
+      if (!is.na(parsed_date)) year(parsed_date) else NA
+    }
+  } else if (!is.null(citation_data$published_date)) {
     year(as.Date(citation_data$published_date))
   } else {
     NA
@@ -157,3 +170,4 @@ merged_data <- bind_rows(combined_data, external_items)
 
 # Optional: Save the merged data to a new CSV file
 write.csv(merged_data, "merged_data.csv", row.names = FALSE)
+
