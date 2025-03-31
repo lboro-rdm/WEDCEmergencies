@@ -7,27 +7,14 @@ library(jsonlite)
 library(dplyr)
 
 ui <- tags$html(
-  lang = "en",  # Set the language attribute
+  lang = "en",
   fluidPage(
-    titlePanel(
-      HTML('<span style="color: #002c3d;"><strong>WEDC, Loughborough University:</strong></span>
-          <span style="color: #009BC9;">Emergencies and Disasters</span><br><br>')
-    ),
-    
-    # CSS to set the background color and font size
     tags$head(
-      tags$style(HTML("
-        body {
-          background-color: #FFFFFF;
-          font-size: 16px;
-        }
-        h2, a {
-          color: #6F3092;
-        }
-        a.hover-underline:hover {
-          text-decoration: underline;
-        }
-      "))
+      tags$title("WEDC, Loughborough University: Publications for Emergencies and Disasters "),  # Add page title here
+      tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
+    ),
+    tags$div(
+      HTML('<span class="wedc-title">WEDC, Loughborough University: Publications for Emergencies and Disasters </span><br><br>')
     ),
     
     # Layout for inputs and outputs
@@ -62,6 +49,15 @@ ui <- tags$html(
           )
         )
       )
+    ),
+    tags$div(class = "footer", 
+             fluidRow(
+               column(12, 
+                      tags$a(href = 'https://doi.org/10.17028/rd.lboro.28525481', 
+                             "Accessibility Statement")
+               )
+             )
     )
+    
   )
 )
