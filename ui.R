@@ -9,30 +9,62 @@ library(dplyr)
 ui <- tags$html(
   lang = "en",
   fluidPage(
+    style = "padding: 0px; margin: 0px;",
     tags$head(
-      tags$title("WEDC, Loughborough University: Publications for Emergencies and Disasters "),  # Add page title here
+      tags$title("WEDC: Publications for Emergencies and Disasters"),
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
     ),
+    
+    # Black banner
     tags$div(
-      HTML('<span class="wedc-title">WEDC, Loughborough University: Publications for Emergencies and Disasters </span><br><br>')
+      class = "black-banner",
+      tags$div(
+        class = "banner-content",
+        tags$a(
+          href = "https://www.lboro.ac.uk",
+          target = "_blank",
+          tags$img(src = "logo.png", class = "uni-logo", alt = "University Logo")
+        ),
+        tags$span("School of Architecture, Building and Civil Engineering")
+      )
+    ),
+    
+    # Blue banner
+    tags$div(
+      class = "blue-banner",
+      tags$div(
+        class = "banner-content",
+        tags$span("Water Engineering and Development Centre"),
+        tags$a(
+          href = "https://www.lboro.ac.uk/research/wedc/publications-and-resources/",
+          class = "return-link",
+          "< Return to Publications and resources"
+        )
+      )
+    ),
+    
+    # Title section
+    tags$div(
+      class = "white-banner",
+      tags$h1("Publications for Emergencies and Disasters")
     ),
     
     # Layout for inputs and outputs
     sidebarLayout(
       sidebarPanel(
-        style = "margin-top: 20px;",
+        style = "margin-left: 20px; padding-right: 20px;",
         
         # Author Search
         textInput(
           inputId = "authorSearch",
-          label = "Search by Author:",
+          label = "Search by Author",
           placeholder = "Enter author's name"
         ),
         
         # Title Search
         textInput(
           inputId = "titleSearch",
-          label = "Search by Title:",
+          label = "Search by Title",
           placeholder = "Enter book or manual title"
         )
 
