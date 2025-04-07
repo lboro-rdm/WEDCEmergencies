@@ -66,8 +66,10 @@ ui <- tags$html(
           inputId = "titleSearch",
           label = "Search by Title",
           placeholder = "Enter book or manual title"
-        )
-
+        ),
+        p(),
+        p("The Water Engineering and Development Centre (WEDC) produces and disseminates quality, relevant and accessible knowledge products to meet the needs of academics, policymakers and practitioners working in various aspects of water engineering and development."),
+        p("Our books, manuals and other resources represent a substantial body of knowledge in water management, engineering and other international development-related subjects developed over 50 years.")
       ),
       
       mainPanel(
